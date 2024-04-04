@@ -4,6 +4,7 @@
 !verilog3-mode.el
 !.gitignore
 !Makefile
+!Readme.org
 !/tests/
 !/tests/*.sv
 !/tests/*.sv.golden
