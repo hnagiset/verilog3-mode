@@ -3,3 +3,8 @@
 *
 !verilog3-mode.el
 !.gitignore
+!Makefile
+!/tests/
+!/tests/*.sv
+!/tests/*.sv.golden
+!/tests/*.el
