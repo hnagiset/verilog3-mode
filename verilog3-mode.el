@@ -828,6 +828,12 @@ Copied from SMIE."
     (if (not (numberp indent))
         ;; If something funny is used (e.g. `noindent'), return it.
         indent
+      (unless (or (save-excursion
+                    ;; If we don't find any token, we're at the beginning of
+                    ;; file.
+                    (verilog3-backward-token-1))
+                  (verilog3-comment-or-string-p))
+        (setq indent 0))
       (if (< indent 0) (setq indent 0)) ; Just in case.
       (if savep
           (save-excursion (indent-line-to indent))
