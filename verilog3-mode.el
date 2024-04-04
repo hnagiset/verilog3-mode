@@ -552,7 +552,7 @@ current point."
          rel0 rel1
          token
          end-of-statement)
-    (condition-case nil
+    (condition-case err
         (catch 'return
           (while t
             (let ((sp (point)))
@@ -561,14 +561,15 @@ current point."
                 (throw 'return token))
               ;; Unbalanced open token
               (when (member token begin-keywords) (throw 'return token))
-              (when (save-excursion (backward-char 1) (looking-at "\\s("))
+              (when (and (not (bobp))
+                         (save-excursion (backward-char 1) (looking-at "\\s(")))
                 (throw 'return "("))
               ;; If we see a semicolon or an `end' keyword, all one-statement
               ;; indentation is considered to have ended. The constraint block
               ;; allows `if' statements to terminate with "}". Let's use that as
               ;; an end token too.
               (when (not end-of-statement)
-                (when (or (equal (string (char-before)) "}")
+                (when (or (and (not (bobp)) (equal (string (char-before)) "}"))
                           (member token (append '(";") end-keywords)))
                   (setq end-of-statement t)))
               (verilog3-backward-sexp token)
@@ -603,7 +604,7 @@ current point."
                                             verilog3-left-aligned-keywords)))
                       (throw 'return ""))))
                 (goto-char savep)))))
-      (error nil))))
+      (error (format "Error in V3 backward stride: %s" err)))))
 
 (defun verilog3-forward-comment-same-line ()
   "Skip comments but stay on same line."
