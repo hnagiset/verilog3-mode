@@ -1,0 +1,70 @@
+
+interface class foo5;
+  interface class foo5;
+    interface class foo5;
+      interface class foo5;
+        interface class foo5;
+	  interface class foo5;
+	    interface class foo5;
+	      interface class foo5;
+		interface class foo5;
+		  interface class foo5;
+		    interface class foo5;
+		      interface class foo5;
+			interface class foo5;
+			  interface class foo5;
+			    interface class foo5;
+			      interface class foo5;
+				interface class foo5;
+				  interface class foo5;
+				    interface class foo5;
+				      interface class foo5;
+					interface class foo5;
+					  interface class foo5;
+					    interface class foo5;
+					      interface class foo5;
+						interface class foo5;
+						  interface class foo5;
+						    interface class foo5;
+						      interface class foo5;
+							interface class foo5;
+							  interface class foo5;
+							    // ...
+							  endclass
+							endclass
+						      endclass
+						    endclass
+						  endclass
+						  // ...
+						endclass
+					      endclass
+					    endclass
+					  endclass
+					endclass
+					// ...
+				      endclass
+				    endclass
+				  endclass
+				endclass
+			      endclass
+			      // ...
+			    endclass
+			  endclass
+			endclass
+		      endclass
+		    endclass
+		    // ...
+		  endclass
+		endclass
+	      endclass
+	    endclass
+	  endclass
+	  // ...
+        endclass
+      endclass
+    endclass
+  endclass
+endclass
+// ...
+
+class foo6;
