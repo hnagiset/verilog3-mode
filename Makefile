@@ -5,10 +5,10 @@ default: tests
 tests:
 	@echo ""
 	@echo "Running indent-tests.el"
-	emacs --no-init-file --no-site-file --script indent-tests.el
+	emacs --no-init-file --no-site-file --script tests/indent-tests.el
 	@echo ""
 	@for test in tests/*-test.sv ; do \
-		echo "Checking $$test.result $$test.golden"; \
+		echo "Checking $$test.golden $$test.result"; \
 		diff $$test.golden $$test.result --color \
 			--ignore-trailing-space; \
 		if [ $$? -ne 0 ] ; then exit 1; fi; \
