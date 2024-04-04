@@ -302,7 +302,7 @@ backward/forward token functions.")
   "Indent buffer and measure time taken to do so."
   (let ((time (current-time)))
     (indent-region (point-min) (point-max))
-    (message "%.06f" (float-time (time-since time)))))
+    (message "Time taken: %.06f" (float-time (time-since time)))))
 
 (defun verilog3-paired-keyword-p (type kw)
   "Return non-nil if keyword KW of TYPE is part of a keyword pair. TYPE may be
@@ -633,10 +633,23 @@ when preceeded by `wait'."
            (member (verilog3-backward-token) '("wait"
                                                "disable"))))
     t)
+   ;; "typedef class", etc.
+   ((save-excursion
+      (and (member tok '("class"))
+           (member (verilog3-backward-token) '("typedef"))))
+    t)
    ;; "virtual interface"
    ((save-excursion
       (and (member tok '("interface"))
            (member (verilog3-backward-token) '("virtual"))))
+    t)
+   ;; "interface class"
+   ((save-excursion
+      (and (member tok '("interface"))
+           (member (progn
+                     (verilog3-forward-token)
+                     (verilog3-forward-token))
+                   '("class"))))
     t)
    ;; "default clocking" without "@" (event) is a single statement.
    ((and (member tok '("clocking"))
@@ -818,22 +831,23 @@ the new indent.
 Copied from SMIE."
   (interactive)
   (let* ((savep (point))
-         (indent (or (with-demoted-errors
-                       (save-excursion
-                         (forward-line 0)
-                         (skip-chars-forward " \t")
-                         (if (>= (point) savep) (setq savep nil))
-                         (or (verilog3-indent-calculate)
-                             (current-indentation))))
-                     (current-indentation))))
+         (calculated (with-demoted-errors
+                         (save-excursion
+                           (forward-line 0)
+                           (skip-chars-forward " \t")
+                           (if (>= (point) savep) (setq savep nil))
+                           (verilog3-indent-calculate))))
+         (indent (or calculated (current-indentation))))
     (if (not (numberp indent))
         ;; If something funny is used (e.g. `noindent'), return it.
         indent
-      (unless (or (save-excursion
+      (if (not calculated) (setq indent 0))
+      (unless (or calculated
+                  (verilog3-comment-or-string-p)
+                  (save-excursion
                     ;; If we don't find any token, we're at the beginning of
                     ;; file.
-                    (verilog3-backward-token-1))
-                  (verilog3-comment-or-string-p))
+                    (verilog3-backward-token-1)))
         (setq indent 0))
       (if (< indent 0) (setq indent 0)) ; Just in case.
       (if savep
