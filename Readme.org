@@ -1,0 +1,3 @@
+* Features
+- Fast and robust indentation for SystemVerilog
+- Syntax highlighting (copied from =verilog-mode=)
